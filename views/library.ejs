@@ -1,0 +1,82 @@
+<%- include("partials/navbar") -%>
+    <link rel="stylesheet" href="/cc:\Users\Utkarsh\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-sandbox\workbench\workbench.htmlss/library.css">
+    <div class="container">
+        <h4 class="mt-2">Your books:</h4>
+        <div class="container">
+            <div class="row">
+                <% if (user.issuedBooks.length === 0) {%>
+                    <p class="text-danger">You dont have any book up your sleeves, grab one from the library below!</p>
+                <% } %>
+                <% user.issuedBooks.forEach(function(book){ %>
+                    <div class="col-lg-2 col-12 py-2 px-2">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <%= book.bookName %>
+                                </h4>
+                            </div>
+                            <form class="mx-auto pb-3" action="/library/<%= user._id %>/returnBook" method="POST">
+                                <button name="returnBookName" value="<%= book.bookName %>" type="submit" class="btn btn-outline-dark">Return this book</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-8">
+                    <h4>Browse books from the library: </h4>
+                </div>
+                <div class="col-4">
+                    <div class="float-end">
+                        <a href="<%= user._id %>/newBook">
+                            <button name="newBook" type="submit" class="btn btn-primary">Add new book!</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <% books.forEach(function(book){ %>
+                    <div class="col-lg-4 col-12 py-2 px-2 bookColumn">
+                        <div class="card shadow border h-100">
+                            <div class="row g-0">
+                                <div class="col-4">
+                                    <img src="<%= book.cover %>" class="card-img-top" alt="">
+                                </div>
+                                <div class="col-8">
+                                    <div class="card-body container">
+                                        <div class="row p-0">
+                                            <div>
+                                                <h4 class="card-title text-start">
+                                                    <%= book.bookName %>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <p class="card-text">
+                                            Rating: <%= book.rating %> / 5<br>
+                                            Available copies: <%= book.available %><br>
+                                            Issued copies: <%= book.issued %><br>
+                                            Total copies: <%= book.total %><br>
+                                        </p>
+                                        <% if (book.available <= 0){ %>
+                                            <button class="btn btn-outline-danger outOfStock">Out of Stock!</button>
+                                        <% } else { %>
+                                            <form action="/library/<%= user._id %>/issueBook" method="POST">
+                                                <button name="bookName" value="<%= book.bookName %>" type="submit" class="btn btn-outline-success">Issue this book!</button>
+                                            </form>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+        </div>
+    </div>
+    </body>
+
+    </html>
